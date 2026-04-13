@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
@@ -6,37 +7,53 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-// Database sementara (array)
-let warga = [];
-let idCounter = 1;
+// 🔥 GANTI DENGAN URL MONGODB KAMU
+const MONGO_URL = "mongodb+srv://adexukhra_db_user:%40Bali2025@cluster0.cepyhwc.mongodb.net/?appName=Cluster0";
 
-// Tambah data
-app.post("/tambah", (req, res) => {
-    const data = { id: idCounter++, ...req.body };
-    warga.push(data);
+// CONNECT DATABASE
+mongoose.connect(MONGO_URL)
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log("Mongo Error:", err));
+
+// SCHEMA
+const WargaSchema = new mongoose.Schema({
+    nik: String,
+    no_kk: String,
+    nama: String,
+    alamat: String,
+    banjar: String,
+    status: String,
+    no_hp: String
+});
+
+const Warga = mongoose.model("Warga", WargaSchema);
+
+// TAMBAH
+app.post("/tambah", async (req, res) => {
+    const data = new Warga(req.body);
+    await data.save();
     res.send("Data ditambahkan");
 });
 
-// Ambil data
-app.get("/warga", (req, res) => {
-    res.json(warga);
+// AMBIL
+app.get("/warga", async (req, res) => {
+    const data = await Warga.find();
+    res.json(data);
 });
 
-// Hapus data
-app.delete("/hapus/:id", (req, res) => {
-    warga = warga.filter(w => w.id != req.params.id);
+// HAPUS
+app.delete("/hapus/:id", async (req, res) => {
+    await Warga.findByIdAndDelete(req.params.id);
     res.send("Data dihapus");
 });
 
-// Edit data
-app.put("/edit/:id", (req, res) => {
-    warga = warga.map(w =>
-        w.id == req.params.id ? { ...w, ...req.body } : w
-    );
+// EDIT
+app.put("/edit/:id", async (req, res) => {
+    await Warga.findByIdAndUpdate(req.params.id, req.body);
     res.send("Data diupdate");
 });
 
-// Jalankan server
+// SERVER
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
