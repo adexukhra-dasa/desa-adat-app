@@ -11,6 +11,8 @@ function loadData() {
             tampilkan(data);
         });
 }
+
+// Tampilkan data
 function tampilkan(data) {
     const list = document.getElementById("list");
     list.innerHTML = "";
@@ -32,7 +34,7 @@ function tampilkan(data) {
                 </p>
 
                 <button class="btn btn-warning btn-sm"
-                    onclick="setEdit(${w.id}, '${w.nik}', '${w.no_kk}', '${w.nama}', '${w.alamat}', '${w.banjar}', '${w.status}', '${w.no_hp}')">
+                    onclick='setEdit(${w.id}, ${JSON.stringify(w.nik)}, ${JSON.stringify(w.no_kk)}, ${JSON.stringify(w.nama)}, ${JSON.stringify(w.alamat)}, ${JSON.stringify(w.banjar)}, ${JSON.stringify(w.status)}, ${JSON.stringify(w.no_hp)})'>
                     Edit
                 </button>
 
@@ -47,17 +49,20 @@ function tampilkan(data) {
         list.appendChild(div);
     });
 }
+
+// Pencarian
 function cari() {
     const keyword = document.getElementById("search").value.toLowerCase();
 
     const hasil = semuaData.filter(w =>
-        w.nama.toLowerCase().includes(keyword) ||
-        w.nik.toLowerCase().includes(keyword) ||
-        w.no_kk.toLowerCase().includes(keyword)
+        (w.nama || "").toLowerCase().includes(keyword) ||
+        (w.nik || "").toLowerCase().includes(keyword) ||
+        (w.no_kk || "").toLowerCase().includes(keyword)
     );
 
     tampilkan(hasil);
 }
+
 // Tambah / Edit
 function tambah() {
     const data = {
@@ -73,18 +78,22 @@ function tambah() {
     if (editId) {
         fetch(API + "/edit/" + editId, {
             method: "PUT",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
         }).then(() => {
             editId = null;
+            resetForm();
             loadData();
         });
     } else {
         fetch(API + "/tambah", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data)
-        }).then(() => loadData());
+        }).then(() => {
+            resetForm();
+            loadData();
+        });
     }
 }
 
@@ -92,13 +101,24 @@ function tambah() {
 function setEdit(id, nik, kk, nama, alamat, banjar, status, no_hp) {
     editId = id;
 
-    document.getElementById("nik").value = nik;
-    document.getElementById("kk").value = kk;
-    document.getElementById("nama").value = nama;
-    document.getElementById("alamat").value = alamat;
-    document.getElementById("banjar").value = banjar;
-    document.getElementById("status").value = status;
-    document.getElementById("nohp").value = no_hp;
+    document.getElementById("nik").value = nik || "";
+    document.getElementById("kk").value = kk || "";
+    document.getElementById("nama").value = nama || "";
+    document.getElementById("alamat").value = alamat || "";
+    document.getElementById("banjar").value = banjar || "";
+    document.getElementById("status").value = status || "Tetap";
+    document.getElementById("nohp").value = no_hp || "";
+}
+
+// Reset form
+function resetForm() {
+    document.getElementById("nik").value = "";
+    document.getElementById("kk").value = "";
+    document.getElementById("nama").value = "";
+    document.getElementById("alamat").value = "";
+    document.getElementById("banjar").value = "";
+    document.getElementById("status").value = "Tetap";
+    document.getElementById("nohp").value = "";
 }
 
 // Hapus
@@ -107,8 +127,11 @@ function hapus(id) {
         .then(() => loadData());
 }
 
-loadData();
+// Logout
 function logout() {
     localStorage.removeItem("login");
     window.location.href = "/login.html";
 }
+
+// Jalankan awal
+loadData();
