@@ -7,10 +7,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
+// Database (aman untuk deploy)
 const db = new sqlite3.Database(":memory:");
 
 // Buat tabel
-db.run(`
 db.run(`
 CREATE TABLE IF NOT EXISTS warga (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,12 +23,6 @@ CREATE TABLE IF NOT EXISTS warga (
     no_hp TEXT
 )
 `);
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nama TEXT,
-    alamat TEXT,
-    no_hp TEXT
-)
-`);
 
 // Tambah data
 app.post("/tambah", (req, res) => {
@@ -37,13 +31,6 @@ app.post("/tambah", (req, res) => {
     db.run(
         "INSERT INTO warga (nik, no_kk, nama, alamat, banjar, status, no_hp) VALUES (?, ?, ?, ?, ?, ?, ?)",
         [nik, no_kk, nama, alamat, banjar, status, no_hp],
-        () => res.send("Data ditambahkan")
-    );
-});
-const { nama, alamat, no_hp } = req.body;
-    db.run(
-        "INSERT INTO warga (nama, alamat, no_hp) VALUES (?, ?, ?)",
-        [nama, alamat, no_hp],
         () => res.send("Data ditambahkan")
     );
 });
@@ -62,21 +49,13 @@ app.delete("/hapus/:id", (req, res) => {
     });
 });
 
-// EDIT DATA
+// Edit data
 app.put("/edit/:id", (req, res) => {
     const { nik, no_kk, nama, alamat, banjar, status, no_hp } = req.body;
 
     db.run(
         "UPDATE warga SET nik=?, no_kk=?, nama=?, alamat=?, banjar=?, status=?, no_hp=? WHERE id=?",
         [nik, no_kk, nama, alamat, banjar, status, no_hp, req.params.id],
-        () => res.send("Data diupdate")
-    );
-});
-    const { nama, alamat, no_hp } = req.body;
-
-    db.run(
-        "UPDATE warga SET nama=?, alamat=?, no_hp=? WHERE id=?",
-        [nama, alamat, no_hp, req.params.id],
         () => res.send("Data diupdate")
     );
 });
