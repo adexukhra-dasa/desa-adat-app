@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -58,8 +56,6 @@ app.get("/warga", async (req, res) => {
 // HAPUS
 app.delete("/hapus/:id", async (req, res) => {
     try {
-        console.log("Hapus ID:", req.params.id); // debug
-
         const result = await Warga.findByIdAndDelete(req.params.id);
 
         if (!result) {
@@ -68,15 +64,29 @@ app.delete("/hapus/:id", async (req, res) => {
 
         res.send("Data dihapus");
     } catch (err) {
-        console.log(err);
+        console.log("Error hapus:", err);
         res.status(500).send("Error hapus");
     }
 });
 
 // EDIT
 app.put("/edit/:id", async (req, res) => {
-    await Warga.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.send("Data diupdate");
+    try {
+        const result = await Warga.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+
+        if (!result) {
+            return res.status(404).send("Data tidak ditemukan");
+        }
+
+        res.send("Data diupdate");
+    } catch (err) {
+        console.log("Error edit:", err);
+        res.status(500).send("Error edit");
+    }
 });
 
 // SERVER
