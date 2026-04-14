@@ -51,8 +51,11 @@ function tampilkan() {
 function tambah() {
     const dataBaru = {
         no_kk: document.getElementById("kk_no").value,
+        no_nik: document.getElementById(nik).value,
         nama: document.getElementById("nama").value,
-        status: document.getElementById("status").value
+        status: document.getElementById("status").value,
+        jenis: document.getElementById("jenis").value,
+        gender: document.getElementById("gender").value
     };
 
     fetch(API + "/tambah", {
@@ -74,6 +77,37 @@ function statistik() {
 
     let kk = [...new Set(data.map(d => d.no_kk))];
     document.getElementById("totalKK").innerText = kk.length;
+
+    // RESET
+    let desa_l = 0, desa_p = 0;
+    let tamiu_l = 0, tamiu_p = 0;
+    let tamu_l = 0, tamu_p = 0;
+
+    data.forEach(d => {
+        if (d.jenis === "Krama Desa") {
+            if (d.gender === "Lanang") desa_l++;
+            else desa_p++;
+        }
+
+        if (d.jenis === "Krama Tamiu") {
+            if (d.gender === "Lanang") tamiu_l++;
+            else tamiu_p++;
+        }
+
+        if (d.jenis === "Tamiu") {
+            if (d.gender === "Lanang") tamu_l++;
+            else tamu_p++;
+        }
+    });
+
+    document.getElementById("desa_l").innerText = desa_l;
+    document.getElementById("desa_p").innerText = desa_p;
+
+    document.getElementById("tamiu_l").innerText = tamiu_l;
+    document.getElementById("tamiu_p").innerText = tamiu_p;
+
+    document.getElementById("tamu_l").innerText = tamu_l;
+    document.getElementById("tamu_p").innerText = tamu_p;
 }
 
 // RAHINAN OTOMATIS (DASAR)

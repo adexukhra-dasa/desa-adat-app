@@ -40,6 +40,59 @@
 
 <!-- DASHBOARD -->
 <div id="utama">
+    <h3>Dashboard Desa Adat</h3>
+
+    <div class="row mt-4">
+
+        <!-- TOTAL KK -->
+        <div class="col-md-3">
+            <div class="card stat-card blue">
+                <h5>Jumlah KK</h5>
+                <h2 id="totalKK">0</h2>
+            </div>
+        </div>
+
+        <!-- TOTAL KRAMA -->
+        <div class="col-md-3">
+            <div class="card stat-card green">
+                <h5>Jumlah Krama</h5>
+                <h2 id="totalWarga">0</h2>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mt-4">
+
+        <!-- KRAMA DESA -->
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Krama Desa Adat</h5>
+                <p>Lanang: <b id="desa_l">0</b></p>
+                <p>Istri: <b id="desa_p">0</b></p>
+            </div>
+        </div>
+
+        <!-- KRAMA TAMIU -->
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Krama Tamiu</h5>
+                <p>Lanang: <b id="tamiu_l">0</b></p>
+                <p>Istri: <b id="tamiu_p">0</b></p>
+            </div>
+        </div>
+
+        <!-- TAMIU -->
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Tamiu</h5>
+                <p>Lanang: <b id="tamu_l">0</b></p>
+                <p>Istri: <b id="tamu_p">0</b></p>
+            </div>
+        </div>
+
+    </div>
+</div>
     <h3>Dashboard</h3>
 
     <div class="row mt-4">
@@ -71,9 +124,21 @@
     <input id="nama" placeholder="Nama" class="form-control mb-2">
     <select id="status" class="form-control mb-2">
         <option>Kepala Keluarga</option>
-        <option>Anggota</option>
+        <option>Istri</option>
+        <option>Anak</option>
+        <object>Orang Tua</object>
+        <object>Famili Lain</object>
     </select>
+<select id="jenis" class="form-control mb-2">
+    <option>Krama Desa</option>
+    <option>Krama Tamiu</option>
+    <option>Tamiu</option>
+</select>
 
+<select id="gender" class="form-control mb-2">
+    <option>Lanang</option>
+    <option>Istri</option>
+</select>
     <button onclick="tambah()" class="btn btn-primary mb-3">Simpan</button>
 
     <div id="list"></div>

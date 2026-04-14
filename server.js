@@ -20,6 +20,8 @@ const WargaSchema = new mongoose.Schema({
     nik: String,
     no_kk: String,
     nama: String,
+    jenis: String,
+    gender: String,
     alamat: String,
     banjar: String,
     status: String,
