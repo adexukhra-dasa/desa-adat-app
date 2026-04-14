@@ -1,68 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>Sistem Data Desa Adat Presana</title>
+<meta charset="UTF-8">
+<title>Dashboard Desa Adat</title>
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-    <script>
-    if (localStorage.getItem("login") !== "true") {
-        window.location.href = "/login.html";
-    }
-    </script>
+<link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-light">
 
-<div class="container mt-4">
+<body>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>📊 Sistem Data Desa Adat Presana</h2>
-        <button class="btn btn-danger" onclick="logout()">Logout</button>
-    </div>
+<div class="d-flex">
 
-    <!-- FORM -->
-    <div class="card p-3 mb-4">
-        <h5>Input Data Krama</h5>
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h4 class="logo">🏛 Desa Adat</h4>
 
-        <div class="row g-2">
-            <div class="col-md-3">
-                <input id="nik" class="form-control" placeholder="NIK">
-            </div>
-            <div class="col-md-3">
-                <input id="kk" class="form-control" placeholder="No KK">
-            </div>
-            <div class="col-md-3">
-                <input id="nama" class="form-control" placeholder="Nama">
-            </div>
-            <div class="col-md-3">
-                <input id="nohp" class="form-control" placeholder="No HP">
-            </div>
+    <button onclick="showMenu('utama')" class="menu-btn active">
+        <i class="bi bi-grid"></i> Menu Utama
+    </button>
 
-            <div class="col-md-4">
-                <input id="alamat" class="form-control" placeholder="Alamat">
-            </div>
-            <div class="col-md-4">
-                <input id="banjar" class="form-control" placeholder="Banjar">
-            </div>
-            <div class="col-md-4">
-                <select id="status" class="form-control">
-                    <option value="Tetap">Krama Desa Adat</option>
-                    <option value="Tamiu">Krama Tamiu</option>
-                    <option value="Pendatang">Tamiu</option>
-                </select>
+    <button onclick="showMenu('kk')" class="menu-btn">
+        <i class="bi bi-people"></i> Data Krama
+    </button>
+
+    <button onclick="showMenu('rahinan')" class="menu-btn">
+        <i class="bi bi-calendar"></i> Rahinan
+    </button>
+
+    <button onclick="logout()" class="menu-btn text-danger">
+        <i class="bi bi-box-arrow-right"></i> Logout
+    </button>
+</div>
+
+<!-- CONTENT -->
+<div class="content p-4">
+
+<!-- DASHBOARD -->
+<div id="utama">
+    <h3>Dashboard</h3>
+
+    <div class="row mt-4">
+
+        <div class="col-md-3">
+            <div class="card stat-card blue">
+                <i class="bi bi-house"></i>
+                <h5>Kepala Keluarga</h5>
+                <h2 id="totalKK">0</h2>
             </div>
         </div>
 
-        <button class="btn btn-primary mt-3" onclick="tambah()">💾 Simpan Data</button>
+        <div class="col-md-3">
+            <div class="card stat-card green">
+                <i class="bi bi-people"></i>
+                <h5>Total Krama</h5>
+                <h2 id="totalWarga">0</h2>
+            </div>
+        </div>
+
     </div>
+</div>
 
-    <!-- SEARCH -->
-    <input id="search" class="form-control mb-3" placeholder="🔍 Cari nama / NIK / KK..." onkeyup="cari()">
+<!-- DATA KK -->
+<div id="kk" style="display:none;">
+    <h3>Data Krama Adat</h3>
 
-    <!-- DATA LIST -->
-    <div id="list" class="row"></div>
+    <input id="kk_no" placeholder="No KK" class="form-control mb-2">
+    <input id="nama" placeholder="Nama" class="form-control mb-2">
+    <select id="status" class="form-control mb-2">
+        <option>Kepala Keluarga</option>
+        <option>Anggota</option>
+    </select>
 
+    <button onclick="tambah()" class="btn btn-primary mb-3">Simpan</button>
+
+    <div id="list"></div>
+</div>
+
+<!-- RAHINAN -->
+<div id="rahinan" style="display:none;">
+    <h3>Kalender Rahinan Bali</h3>
+
+    <ul id="rahinanList" class="list-group"></ul>
+</div>
+
+</div>
 </div>
 
 <script src="script.js"></script>

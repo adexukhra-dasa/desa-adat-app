@@ -1,141 +1,98 @@
 const API = "";
-let semuaData = [];
-let editId = null;
+
+let data = [];
+
+// Menu
+function showMenu(menu) {
+    document.getElementById("utama").style.display = "none";
+    document.getElementById("kk").style.display = "none";
+    document.getElementById("rahinan").style.display = "none";
+
+    document.getElementById(menu).style.display = "block";
+}
 
 // Load data
 function loadData() {
     fetch(API + "/warga")
         .then(res => res.json())
-        .then(data => {
-            semuaData = data;
-            tampilkan(data);
+        .then(d => {
+            data = d;
+            tampilkan();
+            statistik();
         });
 }
 
-// Tampilkan data
-function tampilkan(data) {
+// Tampilkan KK
+function tampilkan() {
     const list = document.getElementById("list");
     list.innerHTML = "";
 
+    const grouped = {};
+
     data.forEach(w => {
-        let div = document.createElement("div");
-        div.className = "col-md-4";
-
-        div.innerHTML = `
-        <div class="card mb-3 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">${w.nama}</h5>
-                <p class="card-text">
-                    <b>NIK:</b> ${w.nik}<br>
-                    <b>KK:</b> ${w.no_kk}<br>
-                    <b>Banjar:</b> ${w.banjar}<br>
-                    <b>Status:</b> ${w.status}<br>
-                    <b>HP:</b> ${w.no_hp}
-                </p>
-
-                <button class="btn btn-warning btn-sm"
-                    onclick='setEdit("${w.id}", ${JSON.stringify(w.nik)}, ${JSON.stringify(w.no_kk)}, ${JSON.stringify(w.nama)}, ${JSON.stringify(w.alamat)}, ${JSON.stringify(w.banjar)}, ${JSON.stringify(w.status)}, ${JSON.stringify(w.no_hp)})'>
-                    Edit
-                </button>
-
-                <button class="btn btn-danger btn-sm"
-                    onclick='hapus("${w.id}")'>
-                    Hapus
-                </button>
-            </div>
-        </div>
-        `;
-
-        list.appendChild(div);
+        if (!grouped[w.no_kk]) grouped[w.no_kk] = [];
+        grouped[w.no_kk].push(w);
     });
-}
 
-// Pencarian
-function cari() {
-    const keyword = document.getElementById("search").value.toLowerCase();
+    for (let kk in grouped) {
+        list.innerHTML += `<h5 class="mt-3">KK: ${kk}</h5>`;
 
-    const hasil = semuaData.filter(w =>
-        (w.nama || "").toLowerCase().includes(keyword) ||
-        (w.nik || "").toLowerCase().includes(keyword) ||
-        (w.no_kk || "").toLowerCase().includes(keyword)
-    );
-
-    tampilkan(hasil);
-}
-
-// Tambah / Edit
-function tambah() {
-    const data = {
-        nik: document.getElementById("nik").value,
-        no_kk: document.getElementById("kk").value,
-        nama: document.getElementById("nama").value,
-        alamat: document.getElementById("alamat").value,
-        banjar: document.getElementById("banjar").value,
-        status: document.getElementById("status").value,
-        no_hp: document.getElementById("nohp").value
-    };
-
-    if (editId) {
-        fetch(API + "/edit/" + editId, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        }).then(() => {
-            editId = null;
-            resetForm();
-            loadData();
-        });
-    } else {
-        fetch(API + "/tambah", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        }).then(() => {
-            resetForm();
-            loadData();
+        grouped[kk].forEach(w => {
+            list.innerHTML += `
+            <div class="card p-2 mb-2">
+                ${w.nama} (${w.status})
+                <button onclick='hapus("${w.id}")' class="btn btn-danger btn-sm float-end">Hapus</button>
+            </div>`;
         });
     }
 }
 
-// Set mode edit
-function setEdit(id, nik, kk, nama, alamat, banjar, status, no_hp) {
-    editId = id;
+// Tambah
+function tambah() {
+    const dataBaru = {
+        no_kk: document.getElementById("kk_no").value,
+        nama: document.getElementById("nama").value,
+        status: document.getElementById("status").value
+    };
 
-    document.getElementById("nik").value = nik || "";
-    document.getElementById("kk").value = kk || "";
-    document.getElementById("nama").value = nama || "";
-    document.getElementById("alamat").value = alamat || "";
-    document.getElementById("banjar").value = banjar || "";
-    document.getElementById("status").value = status || "Tetap";
-    document.getElementById("nohp").value = no_hp || "";
-}
-
-// Reset form
-function resetForm() {
-    document.getElementById("nik").value = "";
-    document.getElementById("kk").value = "";
-    document.getElementById("nama").value = "";
-    document.getElementById("alamat").value = "";
-    document.getElementById("banjar").value = "";
-    document.getElementById("status").value = "Tetap";
-    document.getElementById("nohp").value = "";
+    fetch(API + "/tambah", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(dataBaru)
+    }).then(() => loadData());
 }
 
 // Hapus
 function hapus(id) {
-    console.log("Hapus ID:", id);
+    fetch(API + "/hapus/" + id, { method: "DELETE" })
+        .then(() => loadData());
+}
 
-    if (!confirm("Yakin mau hapus data ini?")) return;
+// Statistik
+function statistik() {
+    document.getElementById("totalWarga").innerText = data.length;
 
-    fetch(API + "/hapus/" + id, {
-        method: "DELETE"
-    })
-    .then(res => res.text())
-    .then(msg => {
-        console.log(msg);
-        loadData();
-    })
-    .catch(err => console.log("Error:", err));
+    let kk = [...new Set(data.map(d => d.no_kk))];
+    document.getElementById("totalKK").innerText = kk.length;
+}
+
+// RAHINAN OTOMATIS (DASAR)
+function loadRahinan() {
+    const rahinan = [
+        "Purnama",
+        "Tilem",
+        "Kajeng Kliwon",
+        "Tumpek Landep",
+        "Tumpek Uye",
+        "Galungan",
+        "Kuningan"
+    ];
+
+    const list = document.getElementById("rahinanList");
+
+    rahinan.forEach(r => {
+        list.innerHTML += `<li class="list-group-item">${r}</li>`;
+    });
 }
 
 // Logout
@@ -144,5 +101,6 @@ function logout() {
     window.location.href = "/login.html";
 }
 
-// Jalankan awal
+// INIT
 loadData();
+loadRahinan();
