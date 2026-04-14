@@ -34,12 +34,12 @@ function tampilkan(data) {
                 </p>
 
                 <button class="btn btn-warning btn-sm"
-                    onclick='setEdit(${w.id}, ${JSON.stringify(w.nik)}, ${JSON.stringify(w.no_kk)}, ${JSON.stringify(w.nama)}, ${JSON.stringify(w.alamat)}, ${JSON.stringify(w.banjar)}, ${JSON.stringify(w.status)}, ${JSON.stringify(w.no_hp)})'>
+                    onclick='setEdit("${w.id}", ${JSON.stringify(w.nik)}, ${JSON.stringify(w.no_kk)}, ${JSON.stringify(w.nama)}, ${JSON.stringify(w.alamat)}, ${JSON.stringify(w.banjar)}, ${JSON.stringify(w.status)}, ${JSON.stringify(w.no_hp)})'>
                     Edit
                 </button>
 
                 <button class="btn btn-danger btn-sm"
-                    onclick="hapus(${w.id})">
+                    onclick='hapus("${w.id}")'>
                     Hapus
                 </button>
             </div>
@@ -123,8 +123,19 @@ function resetForm() {
 
 // Hapus
 function hapus(id) {
-    fetch(API + "/hapus/" + id, { method: "DELETE" })
-        .then(() => loadData());
+    console.log("Hapus ID:", id);
+
+    if (!confirm("Yakin mau hapus data ini?")) return;
+
+    fetch(API + "/hapus/" + id, {
+        method: "DELETE"
+    })
+    .then(res => res.text())
+    .then(msg => {
+        console.log(msg);
+        loadData();
+    })
+    .catch(err => console.log("Error:", err));
 }
 
 // Logout

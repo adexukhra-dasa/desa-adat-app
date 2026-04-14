@@ -55,8 +55,20 @@ app.get("/warga", async (req, res) => {
 
 // HAPUS
 app.delete("/hapus/:id", async (req, res) => {
-    await Warga.findByIdAndDelete(req.params.id);
-    res.send("Data dihapus");
+    try {
+        console.log("Hapus ID:", req.params.id); // debug
+
+        const result = await Warga.findByIdAndDelete(req.params.id);
+
+        if (!result) {
+            return res.status(404).send("Data tidak ditemukan");
+        }
+
+        res.send("Data dihapus");
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Error hapus");
+    }
 });
 
 // EDIT
