@@ -82,7 +82,51 @@ function statistik() {
     let desa_l = 0, desa_p = 0;
     let tamiu_l = 0, tamiu_p = 0;
     let tamu_l = 0, tamu_p = 0;
+let chartJenis;
+let chartGender;
 
+function buatGrafik() {
+
+    let desa = 0, tamiu = 0, tamu = 0;
+    let lanang = 0, istri = 0;
+
+    data.forEach(d => {
+
+        if (d.jenis === "Krama Desa") desa++;
+        if (d.jenis === "Krama Tamiu") tamiu++;
+        if (d.jenis === "Tamiu") tamu++;
+
+        if (d.gender === "Lanang") lanang++;
+        if (d.gender === "Istri") istri++;
+    });
+
+    // Hapus chart lama
+    if (chartJenis) chartJenis.destroy();
+    if (chartGender) chartGender.destroy();
+
+    // PIE CHART
+    chartJenis = new Chart(document.getElementById("chartJenis"), {
+        type: "pie",
+        data: {
+            labels: ["Krama Desa", "Krama Tamiu", "Tamiu"],
+            datasets: [{
+                data: [desa, tamiu, tamu]
+            }]
+        }
+    });
+
+    // BAR CHART
+    chartGender = new Chart(document.getElementById("chartGender"), {
+        type: "bar",
+        data: {
+            labels: ["Lanang", "Istri"],
+            datasets: [{
+                label: "Jumlah",
+                data: [lanang, istri]
+            }]
+        }
+    });
+}
     data.forEach(d => {
         if (d.jenis === "Krama Desa") {
             if (d.gender === "Lanang") desa_l++;

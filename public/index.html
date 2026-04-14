@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
+<head><script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <meta charset="UTF-8">
 <title>Dashboard Desa Adat</title>
 
@@ -44,7 +44,6 @@
 
     <div class="row mt-4">
 
-        <!-- TOTAL KK -->
         <div class="col-md-3">
             <div class="card stat-card blue">
                 <h5>Jumlah KK</h5>
@@ -52,13 +51,59 @@
             </div>
         </div>
 
-        <!-- TOTAL KRAMA -->
         <div class="col-md-3">
             <div class="card stat-card green">
                 <h5>Jumlah Krama</h5>
                 <h2 id="totalWarga">0</h2>
             </div>
         </div>
+
+    </div>
+<div class="row mt-4">
+
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>Grafik Jenis Krama</h5>
+            <canvas id="chartJenis"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card p-3">
+            <h5>Grafik Gender</h5>
+            <canvas id="chartGender"></canvas>
+        </div>
+    </div>
+
+</div>
+    <div class="row mt-4">
+
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Krama Desa Adat</h5>
+                <p>Lanang: <b id="desa_l">0</b></p>
+                <p>Istri: <b id="desa_p">0</b></p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Krama Tamiu</h5>
+                <p>Lanang: <b id="tamiu_l">0</b></p>
+                <p>Istri: <b id="tamiu_p">0</b></p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5>Tamiu</h5>
+                <p>Lanang: <b id="tamu_l">0</b></p>
+                <p>Istri: <b id="tamu_p">0</b></p>
+            </div>
+        </div>
+
+    </div>
+</div>
 
     </div>
 
