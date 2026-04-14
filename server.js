@@ -39,9 +39,8 @@ app.post("/tambah", async (req, res) => {
 app.get("/warga", async (req, res) => {
     const data = await Warga.find();
 
-    // Ubah _id jadi id
     const hasil = data.map(d => ({
-        id: d._id,
+        id: d._id.toString(), // 🔥 FIX DI SINI
         nik: d.nik,
         no_kk: d.no_kk,
         nama: d.nama,
@@ -62,7 +61,7 @@ app.delete("/hapus/:id", async (req, res) => {
 
 // EDIT
 app.put("/edit/:id", async (req, res) => {
-    await Warga.findByIdAndUpdate(req.params.id, req.body);
+    await Warga.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.send("Data diupdate");
 });
 
