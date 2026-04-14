@@ -38,7 +38,20 @@ app.post("/tambah", async (req, res) => {
 // AMBIL
 app.get("/warga", async (req, res) => {
     const data = await Warga.find();
-    res.json(data);
+
+    // Ubah _id jadi id
+    const hasil = data.map(d => ({
+        id: d._id,
+        nik: d.nik,
+        no_kk: d.no_kk,
+        nama: d.nama,
+        alamat: d.alamat,
+        banjar: d.banjar,
+        status: d.status,
+        no_hp: d.no_hp
+    }));
+
+    res.json(hasil);
 });
 
 // HAPUS
