@@ -1,77 +1,58 @@
-// ==========================
-// IMPORT
-// ==========================
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-// ==========================
-// INIT APP
-// ==========================
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-// ==========================
-// MONGODB CONNECTION
-// ==========================
-const MONGO_URL = process.env.MONGO_URL;
-MONGO_URL=mongodb+srv://adexukhra_db_user:%40Bali2025@cluster0.cepyhwc.mongodb.net/desa_adat?retryWrites=true&w=majority
-// CEK ENV
-if (!MONGO_URL) {
-    console.error("❌ MONGO_URL belum diset di Railway!");
-    process.exit(1);
-}
+// =======================
+// MONGODB (PASTE LANGSUNG)
+// =======================
+const MONGO_URL = "mongodb+srv://adexukhra_db_user:%40Bali2025@cluster0.cepyhwc.mongodb.net/desa_adat?retryWrites=true&w=majority";
 
-// CONNECT DATABASE
-mongoose.connect(MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log("✅ MongoDB Connected"))
-.catch(err => {
-    console.error("❌ MongoDB Error:", err.message);
-    process.exit(1);
+// CONNECT
+mongoose.connect(MONGO_URL)
+    .then(() => console.log("✅ MongoDB Connected"))
+    .catch(err => {
+        console.log("❌ Mongo Error:", err.message);
+    });
+
+// =======================
+// SCHEMA
+// =======================
+const Warga = mongoose.model("Warga", {
+    no_kk: String,
+    nama: String,
+    status: String,
+    jenis: String,
+    gender: String
 });
 
-// ==========================
-// SCHEMA
-// ==========================
-const WargaSchema = new mongoose.Schema({
-    no_kk: { type: String, required: true },
-    nama: { type: String, required: true },
-    status: { type: String },
-    jenis: { type: String },
-    gender: { type: String }
-}, { timestamps: true });
-
-const Warga = mongoose.model("Warga", WargaSchema);
-
-// ==========================
+// =======================
 // ROUTES
-// ==========================
+// =======================
 
-// TEST API
+// TEST
 app.get("/test", (req, res) => {
     res.send("API OK");
 });
 
-// TAMBAH DATA
+// TAMBAH
 app.post("/tambah", async (req, res) => {
     try {
-        const data = new Warga(req.body);
-        await data.save();
-        res.json({ success: true, message: "Data ditambahkan" });
+        await new Warga(req.body).save();
+        res.send("OK");
     } catch (err) {
-        res.status(500).json({ success: false, error: err.message });
+        res.status(500).send(err.message);
     }
 });
 
-// AMBIL DATA
+// AMBIL
 app.get("/warga", async (req, res) => {
     try {
-        const data = await Warga.find().sort({ createdAt: -1 });
+        const data = await Warga.find().sort({ _id: -1 });
 
         const hasil = data.map(d => ({
             id: d._id.toString(),
@@ -84,58 +65,33 @@ app.get("/warga", async (req, res) => {
 
         res.json(hasil);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).send(err.message);
     }
 });
 
-// HAPUS DATA
+// HAPUS
 app.delete("/hapus/:id", async (req, res) => {
     try {
-        const result = await Warga.findByIdAndDelete(req.params.id);
-
-        if (!result) {
-            return res.status(404).json({ message: "Data tidak ditemukan" });
-        }
-
-        res.json({ success: true, message: "Data dihapus" });
+        await Warga.findByIdAndDelete(req.params.id);
+        res.send("OK");
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).send(err.message);
     }
 });
 
-// EDIT DATA
+// EDIT
 app.put("/edit/:id", async (req, res) => {
     try {
-        const result = await Warga.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true }
-        );
-
-        if (!result) {
-            return res.status(404).json({ message: "Data tidak ditemukan" });
-        }
-
-        res.json({ success: true, message: "Data diupdate" });
+        await Warga.findByIdAndUpdate(req.params.id, req.body);
+        res.send("OK");
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).send(err.message);
     }
 });
 
-// ==========================
-// HANDLE ERROR GLOBAL
-// ==========================
-process.on("uncaughtException", err => {
-    console.error("❌ Uncaught Exception:", err);
-});
-
-process.on("unhandledRejection", err => {
-    console.error("❌ Unhandled Rejection:", err);
-});
-
-// ==========================
-// SERVER START
-// ==========================
+// =======================
+// SERVER
+// =======================
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
