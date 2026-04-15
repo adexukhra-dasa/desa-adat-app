@@ -8,8 +8,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // 🔥 GANTI DENGAN URL MONGODB KAMU
-const MONGO_URL = mongodb+srv://adexukhra_db_user:%40Bali2025@cluster0.cepyhwc.mongodb.net/?appName=Cluster0;
-
+const MONGO_URL=mongodb+srv://adexukhra_db_user:%40Bali2025@cluster0.cepyhwc.mongodb.net/desa_adat?retryWrites=true&w=majority
 // CONNECT
 mongoose.connect(MONGO_URL)
     .then(() => console.log("MongoDB Connected"))
