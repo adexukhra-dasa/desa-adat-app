@@ -1,94 +1,50 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-// 🔥 GANTI DENGAN URL MONGODB KAMU
-const MONGO_URL = "mongodb+srv://adexukhra_db_user:%40Bali2025@cluster0.cepyhwc.mongodb.net/?appName=Cluster0";
+const db = new sqlite3.Database("./database.db");
 
-// CONNECT DATABASE
-mongoose.connect(MONGO_URL)
-    .then(() => console.log("MongoDB Connected"))
-    .catch(err => console.log("Mongo Error:", err));
-
-// SCHEMA
-const WargaSchema = new mongoose.Schema({
-    nik: String,
-    no_kk: String,
-    nama: String,
-    jenis: String,
-    gender: String,
-    alamat: String,
-    banjar: String,
-    status: String,
-    no_hp: String
-});
-
-const Warga = mongoose.model("Warga", WargaSchema);
+// CREATE TABLE
+db.run(`
+CREATE TABLE IF NOT EXISTS warga (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    no_kk TEXT,
+    nama TEXT,
+    status TEXT,
+    jenis TEXT,
+    gender TEXT
+)
+`);
 
 // TAMBAH
-app.post("/tambah", async (req, res) => {
-    const data = new Warga(req.body);
-    await data.save();
-    res.send("Data ditambahkan");
+app.post("/tambah", (req, res) => {
+    const { no_kk, nama, status, jenis, gender } = req.body;
+
+    db.run(
+        "INSERT INTO warga (no_kk, nama, status, jenis, gender) VALUES (?, ?, ?, ?, ?)",
+        [no_kk, nama, status, jenis, gender],
+        () => res.send("OK")
+    );
 });
 
 // AMBIL
-app.get("/warga", async (req, res) => {
-    const data = await Warga.find();
-
-    const hasil = data.map(d => ({
-        id: d._id.toString(), // 🔥 FIX DI SINI
-        nik: d.nik,
-        no_kk: d.no_kk,
-        nama: d.nama,
-        alamat: d.alamat,
-        banjar: d.banjar,
-        status: d.status,
-        no_hp: d.no_hp
-    }));
-
-    res.json(hasil);
+app.get("/warga", (req, res) => {
+    db.all("SELECT * FROM warga", [], (err, rows) => {
+        res.json(rows);
+    });
 });
 
 // HAPUS
-app.delete("/hapus/:id", async (req, res) => {
-    try {
-        const result = await Warga.findByIdAndDelete(req.params.id);
-
-        if (!result) {
-            return res.status(404).send("Data tidak ditemukan");
-        }
-
-        res.send("Data dihapus");
-    } catch (err) {
-        console.log("Error hapus:", err);
-        res.status(500).send("Error hapus");
-    }
-});
-
-// EDIT
-app.put("/edit/:id", async (req, res) => {
-    try {
-        const result = await Warga.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true }
-        );
-
-        if (!result) {
-            return res.status(404).send("Data tidak ditemukan");
-        }
-
-        res.send("Data diupdate");
-    } catch (err) {
-        console.log("Error edit:", err);
-        res.status(500).send("Error edit");
-    }
+app.delete("/hapus/:id", (req, res) => {
+    db.run("DELETE FROM warga WHERE id=?", [req.params.id], () => {
+        res.send("OK");
+    });
 });
 
 // SERVER

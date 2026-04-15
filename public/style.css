@@ -1,13 +1,16 @@
 body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
     background: #f1f5f9;
 }
 
 .sidebar {
-    width: 230px;
+    width: 240px;
     height: 100vh;
     background: #0f172a;
     color: white;
     padding: 20px;
+    position: fixed;
 }
 
 .logo {
@@ -23,7 +26,8 @@ body {
     background: transparent;
     color: white;
     text-align: left;
-    border-radius: 8px;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
 .menu-btn:hover {
@@ -31,14 +35,20 @@ body {
 }
 
 .content {
-    width: 100%;
+    margin-left: 240px;
+    padding: 20px;
 }
 
-.stat-card {
-    padding: 20px;
+.card {
     border-radius: 15px;
-    color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.stat {
     text-align: center;
+    padding: 20px;
+    color: white;
+    border-radius: 15px;
 }
 
 .blue { background: #3b82f6; }
