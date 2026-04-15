@@ -1,3 +1,6 @@
+if (!localStorage.getItem("login")) {
+    window.location.href = "/login.html";
+}
 const API = "";
 
 let data = [];
@@ -107,25 +110,6 @@ function statistik() {
 
     document.getElementById("tamu_l").innerText = tamu_l;
     document.getElementById("tamu_p").innerText = tamu_p;
-}
-
-// RAHINAN OTOMATIS (DASAR)
-function loadRahinan() {
-    const rahinan = [
-        "Purnama",
-        "Tilem",
-        "Kajeng Kliwon",
-        "Tumpek Landep",
-        "Tumpek Uye",
-        "Galungan",
-        "Kuningan"
-    ];
-
-    const list = document.getElementById("rahinanList");
-
-    rahinan.forEach(r => {
-        list.innerHTML += `<li class="list-group-item">${r}</li>`;
-    });
 }
 
 // Logout
