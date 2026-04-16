@@ -1,173 +1,22 @@
-<!DOCTYPE html>
-<html lang="id">
-<head><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<meta charset="UTF-8">
-<title>Dashboard Desa Adat</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-<link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-<div class="d-flex">
-
-<!-- SIDEBAR -->
 <div class="sidebar">
-    <h4 class="logo">🏛 Desa Adat</h4>
+    <h4>DESA ADAT</h4>
 
-    <button onclick="showMenu('utama')" class="menu-btn active">
-        <i class="bi bi-grid"></i> Menu Utama
-    </button>
-
-    <button onclick="showMenu('kk')" class="menu-btn">
-        <i class="bi bi-people"></i> Data Krama
-    </button>
-
-    <button onclick="logout()" class="menu-btn text-danger">
-        <i class="bi bi-box-arrow-right"></i> Logout
-    </button>
+    <button onclick="showMenu('utama', this)" class="menu active">Menu Utama</button>
+    <button onclick="showMenu('data', this)" class="menu">Data Krama</button>
+    <button onclick="logout()" class="menu logout">Logout</button>
 </div>
 
-<!-- CONTENT -->
-<div class="content p-4">
+<div class="content">
 
-<!-- DASHBOARD -->
-<div id="utama">
-    <h3>Dashboard Desa Adat</h3>
-
-    <div class="row mt-4">
-
-        <!-- TOTAL KK -->
-        <div class="col-md-3">
-            <div class="card stat-card blue">
-                <h5>Jumlah KK</h5>
-                <h2 id="totalKK">0</h2>
-            </div>
-        </div>
-
-        <!-- TOTAL KRAMA -->
-        <div class="col-md-3">
-            <div class="card stat-card green">
-                <h5>Jumlah Krama</h5>
-                <h2 id="totalWarga">0</h2>
-            </div>
-        </div>
-
+    <!-- MENU UTAMA -->
+    <div id="utama" class="page active">
+        <h2>Dashboard</h2>
+        <p>Isi dashboard disini</p>
     </div>
 
-    <div class="row mt-4">
-
-        <!-- KRAMA DESA -->
-        <div class="col-md-4">
-            <div class="card p-3">
-                <h5>Krama Desa Adat</h5>
-                <p>Lanang: <b id="desa_l">0</b></p>
-                <p>Istri: <b id="desa_p">0</b></p>
-            </div>
-        </div>
-
-        <!-- KRAMA TAMIU -->
-        <div class="col-md-4">
-            <div class="card p-3">
-                <h5>Krama Tamiu</h5>
-                <p>Lanang: <b id="tamiu_l">0</b></p>
-                <p>Istri: <b id="tamiu_p">0</b></p>
-            </div>
-        </div>
-
-        <!-- TAMIU -->
-        <div class="col-md-4">
-            <div class="card p-3">
-                <h5>Tamiu</h5>
-                <p>Lanang: <b id="tamu_l">0</b></p>
-                <p>Istri: <b id="tamu_p">0</b></p>
-            </div>
-        </div>
-
+    <!-- DATA KRAMA -->
+    <div id="data" class="page">
+        <h2>Data Krama</h2>
     </div>
-</div>
-
-<!-- ===== DATA KRAMA ===== -->
-<div id="data" style="display:none;">
-
-<h3>Input Data Krama</h3>
-
-<div class="card p-3 mb-3">
-
-<input id="no_kk" class="form-control mb-2" placeholder="No KK">
-
-<input id="nama" class="form-control mb-2" placeholder="Nama">
-<input id="nik" class="form-control mb-2" placeholder="NIK">
-
-<select id="gender" class="form-control mb-2">
-    <option>Lanang</option>
-    <option>Istri</option>
-</select>
-
-<input id="tempat_lahir" class="form-control mb-2" placeholder="Tempat Lahir">
-<input id="tanggal_lahir" type="date" class="form-control mb-2">
-
-<input id="agama" class="form-control mb-2" placeholder="Agama">
-<input id="pendidikan" class="form-control mb-2" placeholder="Pendidikan">
-<input id="pekerjaan" class="form-control mb-2" placeholder="Pekerjaan">
-
-<input id="gol_darah" class="form-control mb-2" placeholder="Golongan Darah">
-
-<select id="status_kawin" class="form-control mb-2">
-    <option>Belum Kawin</option>
-    <option>Kawin</option>
-</select>
-
-<select id="hubungan" class="form-control mb-2">
-    <option>Kepala Keluarga</option>
-    <option>Istri</option>
-    <option>Anak</option>
-    <option>Orang Tua</option>
-    <option>Famili Lain</option>
-</select>
-
-<select id="kewarganegaraan" class="form-control mb-2">
-    <option>WNI</option>
-    <option>WNA</option>
-</select>
-
-<input id="ayah" class="form-control mb-2" placeholder="Nama Ayah">
-<input id="ibu" class="form-control mb-2" placeholder="Nama Ibu">
-
-<select id="jenis" class="form-control mb-2">
-    <option>Krama Desa Adat</option>
-    <option>Krama Tamiu</option>
-    <option>Tamiu</option>
-</select>
-
-<button onclick="tambah()" class="btn btn-primary w-100">Simpan</button>
 
 </div>
-
-<!-- TABEL -->
-<h4>Data Krama</h4>
-<button onclick="exportPDF()" class="btn btn-danger mb-2">Download PDF</button>
-
-<table class="table table-bordered" id="tabel">
-<thead>
-<tr>
-<th>KK</th>
-<th>Nama</th>
-<th>NIK</th>
-<th>JK</th>
-<th>Hubungan</th>
-<th>Jenis Krama</th>
-<th>Aksi</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-
-</div>
-
-<script src="script.js"></script>
-</body>
-</html>
