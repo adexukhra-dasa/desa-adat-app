@@ -25,9 +25,20 @@ mongoose.connect(MONGO_URL)
 const Warga = mongoose.model("Warga", {
     no_kk: String,
     nama: String,
-    status: String,
-    jenis: String,
-    gender: String
+    nik: String,
+    gender: String,
+    tempat_lahir: String,
+    tanggal_lahir: String,
+    agama: String,
+    pendidikan: String,
+    pekerjaan: String,
+    gol_darah: String,
+    status_kawin: String,
+    hubungan: String,
+    kewarganegaraan: String,
+    ayah: String,
+    ibu: String,
+    jenis: String
 });
 
 // =======================
